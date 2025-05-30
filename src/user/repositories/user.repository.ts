@@ -35,6 +35,7 @@ export class UserRepository implements Repository<User> {
 
     user.password = password;
     user.version = version;
+    user.updatedAt = Date.now();
 
     this.users[user.id] = user;
 
