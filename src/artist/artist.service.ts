@@ -4,12 +4,14 @@ import { Artist } from './models/artist.model';
 import { ArtistCreateDto } from './dto/artist-create.dto';
 import { ArtistUpdateDto } from './dto/artist-update.dto';
 import { TrackRepository } from '../track/repositories/track.repository';
+import { AlbumRepository } from '../album/repositories/album.repository';
 
 @Injectable()
 export class ArtistService {
   constructor(
     private readonly repository: ArtistRepository,
     private readonly trackRepository: TrackRepository,
+    private readonly albumRepository: AlbumRepository,
   ) {}
 
   public all(): Artist[] {
@@ -43,6 +45,10 @@ export class ArtistService {
         null,
         track.albumId,
       );
+    });
+
+    this.albumRepository.getByArtistId(id).forEach((album) => {
+      this.albumRepository.update(album.id, album.name, album.year, null);
     });
 
     return result;
