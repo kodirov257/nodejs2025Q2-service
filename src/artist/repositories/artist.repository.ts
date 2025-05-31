@@ -2,8 +2,9 @@ import { randomUUID } from 'node:crypto';
 
 import { Repository } from '../../contracts/repository';
 import { Artist } from '../models/artist.model';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+@Injectable()
 export class ArtistRepository implements Repository<Artist> {
   private artists: Record<string, Artist> = {};
 
@@ -26,7 +27,7 @@ export class ArtistRepository implements Repository<Artist> {
       throw new NotFoundException('Artist not found');
     }
 
-    return this.artists[id];
+    return artist;
   }
 
   update(id: string, name: string, grammy: boolean): Artist {

@@ -27,7 +27,7 @@ export class UserRepository implements Repository<User> {
       throw new NotFoundException('User not found');
     }
 
-    return this.users[id];
+    return user;
   }
 
   findByLogin(login: string): User | undefined {
