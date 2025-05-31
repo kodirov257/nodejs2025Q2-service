@@ -30,6 +30,10 @@ export class UserRepository implements Repository<User> {
     return this.users[id];
   }
 
+  findByLogin(login: string): User | undefined {
+    return this.all().find((user) => user.login === login);
+  }
+
   update(id: string, password: string, version: number): User {
     const user = this.find(id);
 

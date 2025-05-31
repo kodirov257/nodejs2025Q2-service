@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ArtistModule } from './artist/artist.module';
+import { IsUniqueConstraint } from './common/validators';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { ArtistModule } from './artist/artist.module';
     ArtistModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, IsUniqueConstraint],
 })
 export class AppModule {}
