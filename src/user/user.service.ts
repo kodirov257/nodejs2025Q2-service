@@ -14,7 +14,7 @@ export class UserService {
     private readonly config: ConfigService,
   ) {}
 
-  public all() {
+  public all(): User[] {
     return this.repository.all();
   }
 
