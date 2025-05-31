@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { Repository } from '../../contracts/repository';
-import { Artist } from '../model/artist.model';
+import { Artist } from '../models/artist.model';
 import { NotFoundException } from '@nestjs/common';
 
 export class ArtistRepository implements Repository<Artist> {

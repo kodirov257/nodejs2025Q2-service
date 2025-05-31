@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ArtistRepository } from './repositories/artist.repository';
-import { Artist } from './model/artist.model';
+import { Artist } from './models/artist.model';
 import { ArtistCreateDto } from './dto/artist-create.dto';
 import { ArtistUpdateDto } from './dto/artist-update.dto';
 
