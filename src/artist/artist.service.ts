@@ -3,10 +3,14 @@ import { ArtistRepository } from './repositories/artist.repository';
 import { Artist } from './models/artist.model';
 import { ArtistCreateDto } from './dto/artist-create.dto';
 import { ArtistUpdateDto } from './dto/artist-update.dto';
+import { TrackRepository } from '../track/repositories/track.repository';
 
 @Injectable()
 export class ArtistService {
-  constructor(private readonly repository: ArtistRepository) {}
+  constructor(
+    private readonly repository: ArtistRepository,
+    private readonly trackRepository: TrackRepository,
+  ) {}
 
   public all(): Artist[] {
     return this.repository.all();
@@ -25,6 +29,22 @@ export class ArtistService {
   }
 
   public async remove(id: string): Promise<boolean> {
-    return this.repository.remove(id);
+    const result = this.repository.remove(id);
+
+    if (!result) {
+      return false;
+    }
+
+    this.trackRepository.getByArtistId(id).forEach((track) => {
+      this.trackRepository.update(
+        track.id,
+        track.name,
+        track.duration,
+        null,
+        track.albumId,
+      );
+    });
+
+    return result;
   }
 }
