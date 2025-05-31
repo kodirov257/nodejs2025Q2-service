@@ -7,6 +7,7 @@ import { ArtistModule } from './artist/artist.module';
 import { IsUniqueConstraint } from './common/validators';
 import { TrackModule } from './track/track.module';
 import { AlbumModule } from './album/album.module';
+import { ExistsConstraint } from './common/validators/exists.constraint';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { AlbumModule } from './album/album.module';
     AlbumModule,
   ],
   controllers: [AppController],
-  providers: [AppService, IsUniqueConstraint],
+  providers: [AppService, IsUniqueConstraint, ExistsConstraint],
 })
 export class AppModule {}

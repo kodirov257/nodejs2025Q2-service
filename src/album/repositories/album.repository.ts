@@ -24,8 +24,12 @@ export class AlbumRepository implements Repository<Album> {
     return this.all().filter((track) => track.artistId === artistId);
   }
 
+  findById(id: string): Album | undefined {
+    return this.albums[id];
+  }
+
   find(id: string): Album {
-    const album = this.albums[id];
+    const album = this.findById(id);
 
     if (!album) {
       throw new NotFoundException('Album not found');

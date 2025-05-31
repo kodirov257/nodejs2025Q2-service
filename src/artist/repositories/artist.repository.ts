@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Repository } from '../../contracts/repository';
 import { Artist } from '../models/artist.model';
-import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class ArtistRepository implements Repository<Artist> {
@@ -18,6 +18,10 @@ export class ArtistRepository implements Repository<Artist> {
     this.artists[artist.id] = artist;
 
     return artist;
+  }
+
+  findById(id: string): Artist | undefined {
+    return this.artists[id];
   }
 
   find(id: string): Artist | undefined {

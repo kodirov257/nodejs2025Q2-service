@@ -6,6 +6,8 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { Exists } from '../../common/decorators/exists.decorator';
+import { ArtistRepository } from '../../artist/repositories/artist.repository';
 
 export class AlbumCreateDto {
   @IsNotEmpty()
@@ -20,5 +22,6 @@ export class AlbumCreateDto {
 
   @IsOptional()
   @IsString()
+  @Exists(() => ArtistRepository, 'id')
   public artistId: string | null;
 }
