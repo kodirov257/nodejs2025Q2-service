@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { ArtistModule } from './artist/artist.module';
 import { IsUniqueConstraint } from './common/validators';
 import { TrackModule } from './track/track.module';
+import { AlbumModule } from './album/album.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TrackModule } from './track/track.module';
     }),
     ArtistModule,
     TrackModule,
+    AlbumModule,
   ],
   controllers: [AppController],
   providers: [AppService, IsUniqueConstraint],

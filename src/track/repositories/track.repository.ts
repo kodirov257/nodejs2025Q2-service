@@ -34,6 +34,10 @@ export class TrackRepository implements Repository<Track> {
     return this.all().filter((track) => track.artistId === artistId);
   }
 
+  getByAlbumId(albumId: string): Track[] {
+    return this.all().filter((track) => track.albumId === albumId);
+  }
+
   find(id: string): Track | undefined {
     const track = this.tracks[id];
 
