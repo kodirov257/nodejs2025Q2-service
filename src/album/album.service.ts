@@ -4,12 +4,14 @@ import { Album } from './models/album.model';
 import { AlbumCreateDto } from './dto/album-create.dto';
 import { AlbumUpdateDto } from './dto/album-update.dto';
 import { TrackRepository } from '../track/repositories/track.repository';
+import { FavoriteRepository } from '../favorite/repositories/favorite.repository';
 
 @Injectable()
 export class AlbumService {
   constructor(
     private readonly repository: AlbumRepository,
     private readonly trackRepository: TrackRepository,
+    private readonly favoriteRepository: FavoriteRepository,
   ) {}
 
   public all(): Album[] {
@@ -44,6 +46,10 @@ export class AlbumService {
         null,
       );
     });
+
+    if (this.favoriteRepository.find()) {
+      this.favoriteRepository.remove(undefined, id);
+    }
 
     return result;
   }

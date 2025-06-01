@@ -4,10 +4,14 @@ import { TrackRepository } from './repositories/track.repository';
 import { TrackCreateDto } from './dto/track-create.dto';
 import { TrackUpdateDto } from './dto/track-update.dto';
 import { Track } from './models/track.model';
+import { FavoriteRepository } from 'src/favorite/repositories/favorite.repository';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly repository: TrackRepository) {}
+  constructor(
+    private readonly repository: TrackRepository,
+    private readonly favoriteRepository: FavoriteRepository,
+  ) {}
 
   public all(): Track[] {
     return this.repository.all();
@@ -37,6 +41,16 @@ export class TrackService {
   }
 
   public remove(id: string): boolean {
-    return this.repository.remove(id);
+    const result = this.repository.remove(id);
+
+    if (!result) {
+      return false;
+    }
+
+    if (this.favoriteRepository.find()) {
+      this.favoriteRepository.remove(undefined, undefined, id);
+    }
+
+    return true;
   }
 }

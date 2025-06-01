@@ -5,6 +5,7 @@ import { ArtistCreateDto } from './dto/artist-create.dto';
 import { ArtistUpdateDto } from './dto/artist-update.dto';
 import { TrackRepository } from '../track/repositories/track.repository';
 import { AlbumRepository } from '../album/repositories/album.repository';
+import { FavoriteRepository } from '../favorite/repositories/favorite.repository';
 
 @Injectable()
 export class ArtistService {
@@ -12,6 +13,7 @@ export class ArtistService {
     private readonly repository: ArtistRepository,
     private readonly trackRepository: TrackRepository,
     private readonly albumRepository: AlbumRepository,
+    private readonly favoriteRepository: FavoriteRepository,
   ) {}
 
   public all(): Artist[] {
@@ -50,6 +52,10 @@ export class ArtistService {
     this.albumRepository.getByArtistId(id).forEach((album) => {
       this.albumRepository.update(album.id, album.name, album.year, null);
     });
+
+    if (this.favoriteRepository.find()) {
+      this.favoriteRepository.remove(id);
+    }
 
     return result;
   }
