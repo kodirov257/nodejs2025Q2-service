@@ -30,6 +30,12 @@ export class TrackRepository implements Repository<Track> {
     return track;
   }
 
+  getByIds(ids: string[]): Track[] {
+    return ids
+      .map((id) => this.tracks[id])
+      .filter((track) => track !== undefined);
+  }
+
   getByArtistId(artistId: string): Track[] {
     return this.all().filter((track) => track.artistId === artistId);
   }
@@ -38,7 +44,7 @@ export class TrackRepository implements Repository<Track> {
     return this.all().filter((track) => track.albumId === albumId);
   }
 
-  find(id: string): Track | undefined {
+  find(id: string): Track {
     const track = this.tracks[id];
 
     if (!track) {
@@ -46,6 +52,10 @@ export class TrackRepository implements Repository<Track> {
     }
 
     return track;
+  }
+
+  findById(id: string): Track | undefined {
+    return this.tracks[id];
   }
 
   update(

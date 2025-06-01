@@ -20,6 +20,12 @@ export class ArtistRepository implements Repository<Artist> {
     return artist;
   }
 
+  getByIds(ids: string[]): Artist[] {
+    return ids
+      .map((id) => this.artists[id])
+      .filter((track) => track !== undefined);
+  }
+
   findById(id: string): Artist | undefined {
     return this.artists[id];
   }

@@ -8,6 +8,7 @@ import { IsUniqueConstraint } from './common/validators';
 import { TrackModule } from './track/track.module';
 import { AlbumModule } from './album/album.module';
 import { ExistsConstraint } from './common/validators/exists.constraint';
+import { FavoriteModule } from './favorite/favorite.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ExistsConstraint } from './common/validators/exists.constraint';
     ArtistModule,
     TrackModule,
     AlbumModule,
+    FavoriteModule,
   ],
   controllers: [AppController],
   providers: [AppService, IsUniqueConstraint, ExistsConstraint],

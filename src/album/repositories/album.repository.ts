@@ -20,6 +20,12 @@ export class AlbumRepository implements Repository<Album> {
     return album;
   }
 
+  getByIds(ids: string[]): Album[] {
+    return ids
+      .map((id) => this.albums[id])
+      .filter((track) => track !== undefined);
+  }
+
   getByArtistId(artistId: string): Album[] {
     return this.all().filter((track) => track.artistId === artistId);
   }
