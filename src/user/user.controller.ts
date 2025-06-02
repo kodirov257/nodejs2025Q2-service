@@ -34,8 +34,8 @@ export class UserController {
     return this.service.create(dto);
   }
 
-  @Get(':id')
-  public async find(@Param('id') id: string) {
+  @Get(':userId')
+  public async find(@Param('userId') id: string) {
     if (!isUUIDValid(id)) {
       throw new BadRequestException('Invalid ID');
     }
@@ -43,8 +43,11 @@ export class UserController {
     return this.service.find(id);
   }
 
-  @Put(':id')
-  public async update(@Param('id') id: string, @Body() dto: UpdatePasswordDto) {
+  @Put(':userId')
+  public async update(
+    @Param('userId') id: string,
+    @Body() dto: UpdatePasswordDto,
+  ) {
     if (!isUUIDValid(id)) {
       throw new BadRequestException('Invalid ID');
     }
@@ -52,9 +55,9 @@ export class UserController {
     return this.service.updatePassword(id, dto);
   }
 
-  @Delete(':id')
+  @Delete(':userId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async remove(@Param('id') id: string) {
+  public async remove(@Param('userId') id: string) {
     if (!isUUIDValid(id)) {
       throw new BadRequestException('Invalid ID');
     }
