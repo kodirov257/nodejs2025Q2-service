@@ -17,6 +17,12 @@ git clone {repository URL}
 npm install
 ```
 
+## Creating .env file
+
+```
+cp .env.example .env
+```
+
 ## Running application
 
 ```
@@ -29,7 +35,7 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## Testing
 
-After application running open new terminal and enter:
+After application running open new terminal and enter (for now only test without authorization):
 
 To run all tests without authorization
 
