@@ -4,11 +4,13 @@ WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
 RUN npm run build
+
+RUN npx prisma generate
 
 EXPOSE ${PORT}
 

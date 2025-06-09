@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  login     String @unique
+  password  String
+  version   Int    @default(1)
+  createdAt Int    @map("created_at")
+  updatedAt Int    @map("updated_at")
+
+  @@map("users")
+}
+
+model Artist {
+  id      String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name    String
+  grammy  Boolean
+  albums  Album[]    @relation("artist")
+  tracks  Track[]    @relation("artist")
+
+  @@map("artists")
+}
+
+model Album {
+  id        String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name      String
+  year      Int
+  artistId  String?    @map("artist_id") @db.Uuid
+  artist    Artist?    @relation("artist", fields: [artistId], references: [id], onDelete: SetNull)
+  tracks    Track[]    @relation("album")
+
+  @@map("albums")
+}
+
+model Track {
+  id        String     @id @default(dbgenerated("uuid_generate_v4()"))
+  name      String
+  artistId  String?    @map("artist_id") @db.Uuid
+  albumId   String?    @map("album_id") @db.Uuid
+  duration  Int
+  artist    Artist?    @relation("artist", fields: [artistId], references: [id], onDelete: SetNull)
+  album     Album?     @relation("album", fields: [albumId], references: [id], onDelete: SetNull)
+
+  @@map("tracks")
+}
+
+model Favorite {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  artistIds String[] @map("artist_ids") @default([]) @db.Uuid
+  albumIds  String[] @map("album_ids") @default([]) @db.Uuid
+  trackIds  String[] @map("track_ids") @default([]) @db.Uuid
+
+  @@map("favorites")
+}
