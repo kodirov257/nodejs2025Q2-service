@@ -5,6 +5,7 @@ import { AlbumRepository } from './repositories/album.repository';
 import { TrackModule } from '../track/track.module';
 import { ArtistModule } from '../artist/artist.module';
 import { FavoriteModule } from '../favorite/favorite.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   providers: [AlbumService, AlbumRepository],
@@ -14,6 +15,7 @@ import { FavoriteModule } from '../favorite/favorite.module';
     forwardRef(() => TrackModule),
     forwardRef(() => ArtistModule),
     forwardRef(() => FavoriteModule),
+    forwardRef(() => PrismaModule),
   ],
 })
 export class AlbumModule {}

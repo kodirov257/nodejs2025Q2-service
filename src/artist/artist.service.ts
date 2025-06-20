@@ -16,19 +16,20 @@ export class ArtistService {
     private readonly favoriteRepository: FavoriteRepository,
   ) {}
 
-  public all(): Artist[] {
+  public async all(): Promise<Artist[]> {
     return this.repository.all();
   }
 
-  public create(dto: ArtistCreateDto): Artist {
+  public async create(dto: ArtistCreateDto): Promise<Artist> {
     return this.repository.create(dto.name, dto.grammy);
   }
 
-  public find(id: string): Artist {
+  public async find(id: string): Promise<Artist> {
     return this.repository.find(id);
   }
 
   public async update(id: string, dto: ArtistUpdateDto): Promise<Artist> {
+    await this.repository.find(id);
     return this.repository.update(id, dto.name, dto.grammy);
   }
 
@@ -49,7 +50,7 @@ export class ArtistService {
       );
     });
 
-    this.albumRepository.getByArtistId(id).forEach((album) => {
+    (await this.albumRepository.getByArtistId(id)).forEach((album) => {
       this.albumRepository.update(album.id, album.name, album.year, null);
     });
 

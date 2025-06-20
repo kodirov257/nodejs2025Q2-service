@@ -7,16 +7,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 export class TrackRepository implements Repository<Track> {
   private tracks: Record<string, Track> = {};
 
-  all(): Track[] {
+  async all(): Promise<Track[]> {
     return Object.values(this.tracks);
   }
 
-  create(
+  async create(
     name: string,
     duration: number,
     artistId?: string,
     albumId?: string,
-  ): Track {
+  ): Promise<Track> {
     const track = new Track(
       randomUUID(),
       name,
@@ -30,21 +30,21 @@ export class TrackRepository implements Repository<Track> {
     return track;
   }
 
-  getByIds(ids: string[]): Track[] {
+  async getByIds(ids: string[]): Promise<Track[]> {
     return ids
       .map((id) => this.tracks[id])
       .filter((track) => track !== undefined);
   }
 
-  getByArtistId(artistId: string): Track[] {
+  async getByArtistId(artistId: string): Promise<Track[]> {
     return this.all().filter((track) => track.artistId === artistId);
   }
 
-  getByAlbumId(albumId: string): Track[] {
+  async getByAlbumId(albumId: string): Promise<Track[]> {
     return this.all().filter((track) => track.albumId === albumId);
   }
 
-  find(id: string): Track {
+  async find(id: string): Promise<Track> {
     const track = this.tracks[id];
 
     if (!track) {
@@ -54,11 +54,11 @@ export class TrackRepository implements Repository<Track> {
     return track;
   }
 
-  findById(id: string): Track | undefined {
+  async findById(id: string): Promise<Track | null> {
     return this.tracks[id];
   }
 
-  update(
+  async update(
     id: string,
     name: string,
     duration: number,
@@ -77,7 +77,7 @@ export class TrackRepository implements Repository<Track> {
     return track;
   }
 
-  remove(id: string): boolean {
+  async remove(id: string): boolean> {
     const track = this.find(id);
 
     delete this.tracks[track.id];

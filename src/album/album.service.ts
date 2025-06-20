@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AlbumRepository } from './repositories/album.repository';
-import { Album } from './models/album.model';
 import { AlbumCreateDto } from './dto/album-create.dto';
 import { AlbumUpdateDto } from './dto/album-update.dto';
 import { TrackRepository } from '../track/repositories/track.repository';
 import { FavoriteRepository } from '../favorite/repositories/favorite.repository';
+import { Album } from '../../generated/prisma';
 
 @Injectable()
 export class AlbumService {
@@ -14,23 +14,23 @@ export class AlbumService {
     private readonly favoriteRepository: FavoriteRepository,
   ) {}
 
-  public all(): Album[] {
+  public async all(): Promise<Album[]> {
     return this.repository.all();
   }
 
-  public create(dto: AlbumCreateDto): Album {
+  public async create(dto: AlbumCreateDto): Promise<Album> {
     return this.repository.create(dto.name, dto.year, dto.artistId);
   }
 
-  public find(id: string): Album {
+  public async find(id: string): Promise<Album> {
     return this.repository.find(id);
   }
 
-  public update(id: string, dto: AlbumUpdateDto): Album {
+  public async update(id: string, dto: AlbumUpdateDto): Promise<Album> {
     return this.repository.update(id, dto.name, dto.year, dto.artistId);
   }
 
-  public remove(id: string): boolean {
+  public async remove(id: string): Promise<boolean> {
     const result = this.repository.remove(id);
 
     if (!result) {

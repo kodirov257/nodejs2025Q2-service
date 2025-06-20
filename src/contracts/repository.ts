@@ -1,7 +1,7 @@
 export interface Repository<T> {
-  all(): T[];
-  create(...args: any): T;
-  find(id: string | number): T | undefined;
-  update(id: string | number, ...args: any): T;
-  remove(id: string | number): boolean;
+  all(): Promise<T[]>;
+  create(...args: any): Promise<T>;
+  find(id: string | number): Promise<T | null>;
+  update(id: string | number, ...args: any): Promise<T>;
+  remove(id: string | number): Promise<boolean>;
 }

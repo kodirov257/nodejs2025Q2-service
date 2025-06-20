@@ -1,40 +1,54 @@
-import { Repository } from 'src/contracts/repository';
 import { randomUUID } from 'node:crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Album } from '../../../generated/prisma';
 
-import { Album } from '../models/album.model';
+import { Repository } from 'src/contracts/repository';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class AlbumRepository implements Repository<Album> {
-  private albums: Record<string, Album> = {};
+  constructor(private readonly prisma: PrismaService) {}
 
-  all(): Album[] {
-    return Object.values(this.albums);
+  async all(): Promise<Album[]> {
+    return this.prisma.album.findMany();
   }
 
-  create(name: string, year: number, artistId?: string): Album {
-    const album = new Album(randomUUID(), name, year, artistId ?? null);
-
-    this.albums[album.id] = album;
-
-    return album;
+  async create(name: string, year: number, artistId?: string): Promise<Album> {
+    return this.prisma.album.create({
+      data: {
+        id: randomUUID(),
+        name: name,
+        year: year,
+        artistId: artistId ?? null,
+      },
+    });
   }
 
-  getByIds(ids: string[]): Album[] {
-    return ids
-      .map((id) => this.albums[id])
-      .filter((track) => track !== undefined);
+  async getByIds(ids: string[]): Promise<Album[]> {
+    return this.prisma.album.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
   }
 
-  getByArtistId(artistId: string): Album[] {
-    return this.all().filter((track) => track.artistId === artistId);
+  async getByArtistId(artistId: string): Promise<Album[]> {
+    return this.prisma.album.findMany({
+      where: {
+        artistId: artistId,
+      },
+    });
   }
 
-  findById(id: string): Album | undefined {
-    return this.albums[id];
+  async findById(id: string): Promise<Album | null> {
+    return this.prisma.album.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  find(id: string): Album {
+  async find(id: string): Promise<Album> {
     const album = this.findById(id);
 
     if (!album) {
@@ -43,22 +57,26 @@ export class AlbumRepository implements Repository<Album> {
     return album;
   }
 
-  update(id: string, name: string, year: number, artistId?: string): Album {
-    const album = this.find(id);
-
-    album.name = name;
-    album.year = year;
-    album.artistId = artistId ?? null;
-
-    this.albums[album.id] = album;
-
-    return album;
+  async update(
+    id: string,
+    name: string,
+    year: number,
+    artistId?: string,
+  ): Promise<Album> {
+    return this.prisma.album.update({
+      where: { id },
+      data: {
+        name: name,
+        year: year,
+        artistId: artistId ?? null,
+      },
+    });
   }
 
-  remove(id: string): boolean {
-    const album = this.find(id);
-
-    delete this.albums[album.id];
+  async remove(id: string): Promise<boolean> {
+    await this.prisma.album.delete({
+      where: { id },
+    });
 
     return true;
   }

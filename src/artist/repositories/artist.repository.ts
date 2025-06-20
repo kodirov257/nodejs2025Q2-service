@@ -1,37 +1,48 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Artist } from '../../../generated/prisma';
 
 import { Repository } from '../../contracts/repository';
-import { Artist } from '../models/artist.model';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class ArtistRepository implements Repository<Artist> {
   private artists: Record<string, Artist> = {};
 
-  all(): Artist[] {
-    return Object.values(this.artists);
+  constructor(private readonly prisma: PrismaService) {}
+
+  async all(): Promise<Artist[]> {
+    return this.prisma.artist.findMany();
   }
 
-  create(name: any, grammy: boolean): Artist {
-    const artist = new Artist(randomUUID().toString(), name, grammy);
-
-    this.artists[artist.id] = artist;
-
-    return artist;
+  async create(name: any, grammy: boolean): Promise<Artist> {
+    return this.prisma.artist.create({
+      data: {
+        id: randomUUID(),
+        name: name,
+        grammy: grammy,
+      },
+    });
   }
 
-  getByIds(ids: string[]): Artist[] {
-    return ids
-      .map((id) => this.artists[id])
-      .filter((track) => track !== undefined);
+  async getByIds(ids: string[]): Promise<Artist[]> {
+    return this.prisma.artist.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
   }
 
-  findById(id: string): Artist | undefined {
-    return this.artists[id];
+  async findById(id: string): Promise<Artist | null> {
+    return this.prisma.artist.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  find(id: string): Artist | undefined {
-    const artist = this.artists[id];
+  async find(id: string): Promise<Artist | null> {
+    const artist = this.findById(id);
 
     if (!artist) {
       throw new NotFoundException('Artist not found');
@@ -40,21 +51,21 @@ export class ArtistRepository implements Repository<Artist> {
     return artist;
   }
 
-  update(id: string, name: string, grammy: boolean): Artist {
-    const artist = this.find(id);
-
-    artist.name = name;
-    artist.grammy = grammy;
-
-    this.artists[artist.id] = artist;
-
-    return artist;
+  async update(id: string, name: string, grammy: boolean): Promise<Artist> {
+    return this.prisma.artist.create({
+      where: { id },
+      data: {
+        id: randomUUID(),
+        name: name,
+        grammy: grammy,
+      },
+    });
   }
 
-  remove(id: string): boolean {
-    const artist = this.find(id);
-
-    delete this.artists[artist.id];
+  async remove(id: string): Promise<boolean> {
+    await this.prisma.artist.delete({
+      where: { id },
+    });
 
     return true;
   }
