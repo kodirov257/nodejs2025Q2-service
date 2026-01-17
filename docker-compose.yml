@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: nodejs2025-app
+    restart: unless-stopped
+    ports:
+      - '${PORT}:${PORT}'
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./prisma:/usr/src/app/prisma
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - db
+    networks:
+      - home-library
+
+  db:
+    build:
+      context: .
+      dockerfile: docker/postgres/Dockerfile
+    restart: unless-stopped
+    container_name: nodejs2025-postgres
+    volumes:
+      - nodejs2025-postgres:/var/lib/postgres/data
+      - ./prisma/init-uuid-ossp.sql:/docker-entrypoint-initdb.d/init-uuid-ossp.sql
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - '54321:5432'
+    networks:
+      - home-library
+
+volumes:
+  nodejs2025-postgres:
+
+networks:
+  home-library:
+    driver: bridge
